@@ -34,15 +34,24 @@ defmodule ExAzureKeyVault.HTTPUtils do
   @doc """
   Returns ssl options.
 
+  Defaults to `[ssl: [versions:, [:"tlsv1.2"]]]`.
+
   ## Examples
 
       iex(1)> ExAzureKeyVault.HTTPUtils.options_ssl()
-      [ssl: [{:versions, [:'tlsv1.2']}]]
+      [ssl: [versions:, :"tlsv1.2"]]
 
+  You may configure your own ssl options:
+
+      config :ex_azure_key_vault,
+        ssl_opts: [versions: [:"tlsv1.2"], cacertfile: "my/custom/file.pem"]
+
+      iex(2)> ExAzureKeyVault.HTTPUtils.options_ssl()
+      [ssl: [versions: [:"tlsv1.2"], cacertfile: "my/custom/file.pem"]]
   """
   @spec options_ssl :: list
   def options_ssl do
-    [ssl: [{:versions, [:"tlsv1.2"]}]]
+    Application.get_env(:ex_azure_key_vault, :ssl_opts, versions: [:"tlsv1.2"])
   end
 
   @doc """
